@@ -218,3 +218,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- 1% Battery project ---
+tools/.edge-profile/
+tools/audit*.txt
+tools/read*.txt
+tools/git-*.txt
+tools/serve.log
+tools/serve.err
+tools/test-out.txt
+tools/e2e-out.txt
+tools/bench1000.txt
+screenshots/raw/
+__pycache__/
+*.pyc
+网址.txt
+tools/.edge-profile2/
+tools/probe-out.txt

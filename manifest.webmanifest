@@ -1,0 +1,25 @@
+{
+  "name": "1% Battery — 最后1%，为最重要的事而留",
+  "short_name": "1% Battery",
+  "description": "Build for when almost nothing is left. 极端窄带与 1% 电量下的高效求救报文系统与可交互实验。",
+  "start_url": "./index.html#/boot",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0d0b",
+  "theme_color": "#0a0d0b",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0d0b">
+<title>1% Battery — 最后1%，为最重要的事而留</title>
+<meta name="description" content="为几乎一无所剩的时刻而构建：在极端受限的带宽、算力与电量下，用更高效的算法把求救信息送到。BNBU AI Track 2026 · 1% Battery。">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <a class="brand" href="#/boot" aria-label="回到开机自检">
+      <span class="brand-battery" aria-hidden="true">
+        <span class="brand-cell"><span class="brand-fill"></span></span><span class="brand-tip"></span>
+      </span>
+      <span class="brand-text">1%<b>BATTERY</b></span>
+    </a>
+    <nav class="dots" id="chapter-dots" aria-label="章节导航"></nav>
+    <div class="status" id="net-status">
+      <span class="status-dot"></span><span class="status-text">检测中…</span>
+    </div>
+  </header>
+  <main id="view" aria-live="polite"></main>
+  <footer class="footer">
+    <span>零依赖 · 零第三方请求 · 可离线运行</span>
+    <span id="footprint">体积测量中…</span>
+  </footer>
+</div>
+<div id="modal-root" aria-hidden="true"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

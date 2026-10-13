@@ -1,0 +1,12 @@
+{
+  "name": "one-percent-battery",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "1% Battery — build for when almost nothing is left. BNBU AI Track 2026.",
+  "scripts": {
+    "test": "node tools/test-core.mjs",
+    "bench": "node tools/bench-node.mjs",
+    "serve": "node tools/serve.mjs"
+  }
+}

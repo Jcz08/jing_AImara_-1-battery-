@@ -1,0 +1,116 @@
+{
+  "generatedAt": "2026-10-13T02:00:53.431Z",
+  "count": 1000,
+  "platform": "Node v22.23.2",
+  "sizes": {
+    "json": {
+      "mean": 287.6,
+      "median": 287,
+      "min": 261,
+      "max": 320
+    },
+    "mono": {
+      "mean": 83.94,
+      "median": 84,
+      "min": 65,
+      "max": 111
+    },
+    "l0": {
+      "mean": 5,
+      "median": 5,
+      "min": 5,
+      "max": 5
+    },
+    "l1": {
+      "mean": 9,
+      "median": 9,
+      "min": 9,
+      "max": 9
+    },
+    "l2": {
+      "mean": 71.94,
+      "median": 72,
+      "min": 53,
+      "max": 99
+    },
+    "layers": {
+      "mean": 85.94,
+      "median": 86,
+      "min": 67,
+      "max": 113
+    },
+    "gzip": {
+      "mean": 270.23,
+      "median": 273,
+      "min": 236,
+      "max": 300
+    },
+    "l2dynHeader": {
+      "mean": 67.94,
+      "median": 68,
+      "min": 52,
+      "max": 84
+    },
+    "l2dyn": {
+      "mean": 125,
+      "median": 125,
+      "min": 94,
+      "max": 162
+    }
+  },
+  "encMs": {
+    "json": 0.00186,
+    "mono": 0.00341,
+    "layered": 0.00351,
+    "gzip": 0.3071
+  },
+  "decMs": {
+    "json": 0.0012,
+    "mono": 0.01543,
+    "layered": 0.01431
+  },
+  "network": {
+    "cfg": {
+      "bps": 600,
+      "loss": 0.3,
+      "rtt": 1500,
+      "packetSize": 32
+    },
+    "json": {
+      "meanMs": 27238,
+      "p50": 26627,
+      "p95": 35913,
+      "successRate": 0.7133
+    },
+    "l0": {
+      "meanMs": 2240,
+      "p50": 1567,
+      "p95": 4700,
+      "successRate": 1
+    },
+    "l1": {
+      "meanMs": 4411,
+      "p95": 7993
+    },
+    "l2": {
+      "meanMs": 12307,
+      "p50": 11900,
+      "p95": 18167
+    },
+    "analytic": {
+      "json": 27029,
+      "l0": 2238,
+      "l2": 8086
+    }
+  },
+  "energy": {
+    "json": 32.69,
+    "l0": 2.69,
+    "full": 14.77
+  },
+  "ratios": {
+    "jsonVsLayered": 3.35,
+    "jsonVsL0": 57.52,
+    "ttfa": 12.16
+  }
+}
