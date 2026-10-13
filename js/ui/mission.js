@@ -12,6 +12,12 @@ let animTimer = null;
 
 export function renderMission(root) {
   const m = state.message;
+  // 原位重渲染：取消在途动画 → 清空当前章节容器 → 重新构建（绝不追加第二份页面）
+  const rerender = () => {
+    if (animTimer) { cancelAnimationFrame(animTimer); animTimer = null; }
+    clear(root);
+    renderMission(root);
+  };
 
   const head = el('div', {}, [
     el('div', { class: 'kicker' }, 'Chapter 02 · 绝境终端 / The Last Window'),
@@ -30,7 +36,7 @@ export function renderMission(root) {
   SCENARIOS.forEach((sc) => {
     const card = el('div', {
       class: 'card scenario-card' + (state.scenarioId === sc.id ? ' selected' : ''),
-      onclick: () => { loadScenario(sc.id); renderMission(root); },
+      onclick: () => { loadScenario(sc.id); rerender(); },
     }, [
       el('div', { class: 'tag' }, `Scenario ${sc.id.toUpperCase()}`),
       el('h3', { style: 'margin:6px 0 2px' }, sc.title),
@@ -108,9 +114,9 @@ export function renderMission(root) {
     el('div', { style: 'display:flex; gap:8px; flex-wrap:wrap' },
       PROFILES.map((p) => el('span', {
         class: 'chip' + (cfg.bps === p.bps ? ' on amber' : ''),
-        onclick: (e) => {
+        onclick: () => {
           Object.assign(cfg, { bps: p.bps, loss: p.loss, rtt: p.rtt });
-          renderMission(root);
+          rerender();
         },
       }, p.name))),
     slider('带宽 bps', cfg.bps, [100, 300, 600, 1200, 2400, 9600, 50000, 200000], (v) => { cfg.bps = v; }, (v) => v >= 1000 ? (v / 1000) + ' kbps' : v + ' bps'),
@@ -127,9 +133,9 @@ export function renderMission(root) {
 
   const runBtn = el('button', {
     class: 'btn primary', style: 'margin-top:18px',
-    onclick: () => { readInputs(); run(); },
+    onclick: () => { readInputs(); run(root); },
   }, '⚡ 发送：两种策略同屏对比');
-  const reseedBtn = el('button', { class: 'btn ghost', style: 'margin-top:18px', onclick: () => { readInputs(); run(Math.floor(Math.random() * 1e9)); } }, '换一个随机信道');
+  const reseedBtn = el('button', { class: 'btn ghost', style: 'margin-top:18px', onclick: () => { readInputs(); run(root, Math.floor(Math.random() * 1e9)); } }, '换一个随机信道');
 
   const stage = el('div', { id: 'mission-stage' });
 
@@ -142,7 +148,7 @@ export function renderMission(root) {
     ]),
   );
 
-  if (state._missionRun) run(state._missionSeed);
+  if (state._missionRun) run(root, state._missionSeed);
 }
 
 function slider(label, value, options, onChange, fmt2) {
@@ -161,10 +167,11 @@ function slider(label, value, options, onChange, fmt2) {
 }
 
 /* ---------- 运行与动画 ---------- */
-function run(seed = 20261013) {
+function run(root, seed = 20261013) {
   state._missionRun = true;
   state._missionSeed = seed;
-  const stage = document.getElementById('mission-stage');
+  const $ = (id) => root.querySelector(id);
+  const stage = $('#mission-stage');
   if (!stage) return;
   clear(stage);
 
@@ -235,8 +242,8 @@ function run(seed = 20261013) {
   /* 动画调度 */
   cancelAnimationFrame(animTimer);
   const t0 = performance.now();
-  const fill = document.getElementById('mission-battery-fill');
-  const pctEl = document.getElementById('mission-battery-pct');
+  const fill = $('#mission-battery-fill');
+  const pctEl = $('#mission-battery-pct');
   const budget = state.budgetJ;
   const pW = ENERGY_MODEL.pRadio + ENERGY_MODEL.pScreen;
   const cutMs = budget / pW * 1000; // 能量预算耗尽时的模拟时间点
@@ -276,22 +283,22 @@ function run(seed = 20261013) {
     fill.classList.toggle('low', remain / budget < 0.3);
     pctEl.textContent = (remain / budget * 100).toFixed(0) + '%';
 
-    setStat('sim-time', fmtMs(simT) + (alive ? '' : '（已关机）'));
-    setStat('a-energy', eA.toFixed(2) + ' J');
-    setStat('b-energy', eB.toFixed(2) + ' J');
+    setStat(root, 'sim-time', fmtMs(simT) + (alive ? '' : '（已关机）'));
+    setStat(root, 'a-energy', eA.toFixed(2) + ' J');
+    setStat(root, 'b-energy', eB.toFixed(2) + ' J');
 
     // 逐层解锁（只在预算耗尽前有效）
     if (!l0Done && alive && simT >= r.layered.l0Ms) {
-      l0Done = true; unlock('l0', renderL0(decodeL0(layers.l0)));
-      setStat('known', 'SOS + 区域', 'var(--green)');
+      l0Done = true; unlock(root, 'l0', renderL0(decodeL0(layers.l0)));
+      setStat(root, 'known', 'SOS + 区域', 'var(--green)');
     }
     if (!l1Done && alive && simT >= r.layered.l1Ms) {
-      l1Done = true; unlock('l1', renderL1(mergeL1(decodeL0(layers.l0), layers.l1)));
-      setStat('known', '精确位置 + 人数', 'var(--green)');
+      l1Done = true; unlock(root, 'l1', renderL1(mergeL1(decodeL0(layers.l0), layers.l1)));
+      setStat(root, 'known', '精确位置 + 人数', 'var(--green)');
     }
     if (!l2Done && alive && simT >= r.layered.l2Ms) {
-      l2Done = true; unlock('l2', renderL2(mergeL2(mergeL1(decodeL0(layers.l0), layers.l1), layers.l2)));
-      setStat('known', '完整求救信息', 'var(--green)');
+      l2Done = true; unlock(root, 'l2', renderL2(mergeL2(mergeL1(decodeL0(layers.l0), layers.l1), layers.l2)));
+      setStat(root, 'known', '完整求救信息', 'var(--green)');
     }
     if (!jsonDone && alive && simT >= r.json.timeMs) {
       jsonDone = true;
@@ -311,13 +318,13 @@ function run(seed = 20261013) {
         u2.querySelector('h4').textContent = '⏳ L2 详情 · 超出能量预算';
         u2.querySelector('.lock-note').textContent = `需 ${(r.layered.l2Ms / 1000 * pW).toFixed(1)} J，预算 ${budget} J 不足；但 L0/L1 已让救援启动——详情可在补充供电/二次窗口补发`;
       }
-      setStat('known', l0Done ? '已送出核心信息（L0/L1）' : '无', 'var(--red)');
+      setStat(root, 'known', l0Done ? '已送出核心信息（L0/L1）' : '无', 'var(--red)');
     }
 
     if (elapsed < DURATION) {
       animTimer = requestAnimationFrame(tick);
     } else {
-      finish(r, jsonBytes.length, layers, budget);
+      finish(root, r, jsonBytes.length, layers, budget);
     }
   };
   animTimer = requestAnimationFrame(tick);
@@ -356,17 +363,17 @@ function stat(label, value, id) {
     el('div', { class: 'metric-label' }, label),
   ]);
 }
-function setStat(id, value, color) {
-  const e = document.getElementById('st-' + id);
+function setStat(root, id, value, color) {
+  const e = root.querySelector('#st-' + id);
   if (e) { e.textContent = value; if (color) e.style.color = color; }
 }
-function unlock(id, html) {
-  const u = document.getElementById('u-' + id);
+function unlock(root, id, html) {
+  const u = root.querySelector('#u-' + id);
+  if (!u) return;
   u.classList.add('unlocked');
   u.querySelector('h4').textContent = u.querySelector('h4').textContent.replace('🔒', '✓');
-  const body = document.getElementById('u-' + id + '-body');
-  body.className = '';
-  body.innerHTML = html;
+  const body = root.querySelector('#u-' + id + '-body');
+  if (body) { body.className = ''; body.innerHTML = html; }
 }
 
 function renderL0(p) {
@@ -390,8 +397,8 @@ function renderL2(p) {
   <span class="tiny">短语来自双方共享词典，每个 1 个标志位；文本经静态 Huffman 压缩</span>`;
 }
 
-function finish(r, jsonBytes, layers, budget) {
-  const stage = document.getElementById('mission-stage');
+function finish(root, r, jsonBytes, layers, budget) {
+  const stage = root.querySelector('#mission-stage');
   const pW = ENERGY_MODEL.pRadio + ENERGY_MODEL.pScreen;
   const eJSON = r.json.timeMs / 1000 * pW;
   const eL0 = r.layered.l0Ms / 1000 * pW;

@@ -9,6 +9,8 @@ export function renderNetwork(root) {
   const msg = messageWithTs();
   const cfg = state.network;
   let windowMs = 30000;
+  // 原位重渲染：清空当前章节容器后重建，绝不追加第二份页面
+  const rerender = () => { clear(root); renderNetwork(root); };
 
   root.append(
     el('div', {}, [
@@ -27,7 +29,7 @@ export function renderNetwork(root) {
     el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' },
       PROFILES.map((p) => el('span', {
         class: 'chip' + (cfg.bps === p.bps && cfg.loss === p.loss ? ' on amber' : ''),
-        onclick: () => { Object.assign(cfg, { bps: p.bps, loss: p.loss, rtt: p.rtt }); renderNetwork(root); },
+        onclick: () => { Object.assign(cfg, { bps: p.bps, loss: p.loss, rtt: p.rtt }); rerender(); },
       }, p.name))),
   ]);
 
