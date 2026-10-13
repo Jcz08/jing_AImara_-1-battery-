@@ -426,6 +426,11 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch((e) => console.warn('SW register failed:', e));
   });
+  // 新版本 Service Worker 接管后自动刷新一次，确保用户拿到最新资源
+  let swReloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!swReloading) { swReloading = true; location.reload(); }
+  });
 }
 
 route();

@@ -1,7 +1,7 @@
 /* sw.js — 1% Battery Service Worker
  * 安装时预缓存全部应用外壳；运行时缓存优先，保证断网可用。
  */
-const CACHE = 'one-percent-v1';
+const CACHE = 'one-percent-v2';
 const ASSETS = [
   './',
   './index.html',
