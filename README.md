@@ -6,7 +6,7 @@
 北师港浸会 AI 赛道编程马拉松参赛作品（选题：**1% Battery**，工程与社会价值方向）。
 本作品是一个**纯静态、零依赖、可离线运行**的交互式教学/演示网页：它不假设网络与算力，而是把“在受限资源下完成任务”这件事做成了可点击、可实验、可复现的完整体验——所有算法从零实现，所有对比数字在你的设备上实时计算。
 
-- 在线 Demo：`https://jcz08.github.io/jing_AImara_-1-battery-/`（部署后生效）
+- 在线 Demo：<https://jcz08.github.io/jing_AImara_-1-battery-/>
 - 提交仓库：<https://github.com/Jcz08/jing_AImara_-1-battery->
 
 ---
